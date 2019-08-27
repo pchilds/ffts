@@ -82,7 +82,7 @@ ffts_execute_nd_real(ffts_plan_t *p, const void *in, void *out)
 {
     const size_t Ms0 = p->Ms[0];
     const size_t Ns0 = p->Ns[0];
-	const size_t Ms0_padded = ((Ms0 / 2 + 1 + 1) & (~1));
+    const size_t Ms0_padded = ((Ms0 / 2 + 1 + 1) & (~1));
 	
     uint32_t *din = (uint32_t*) in;
     uint64_t *buf = p->buf;
@@ -94,10 +94,10 @@ ffts_execute_nd_real(ffts_plan_t *p, const void *in, void *out)
 
     plan = p->plans[0];
     for (j = 0; j < Ns0; j++) {
-		plan->transform(plan, din + (j * Ms0), buf + (j * Ms0_padded));
+	plan->transform(plan, din + (j * Ms0), buf + (j * Ms0_padded));
     }
 
-	ffts_transpose(buf, dout, Ms0_padded, Ns0);
+    ffts_transpose(buf, dout, Ms0_padded, Ns0);
 
     for (i = 1; i < p->rank; i++) {
         const size_t Ms = p->Ms[i];
@@ -108,8 +108,8 @@ ffts_execute_nd_real(ffts_plan_t *p, const void *in, void *out)
         for (j = 0; j < Ns; j++) {
             plan->transform(plan, dout + (j * Ms), buf + (j * Ms));
         }
-		const size_t Ns_padded = ((Ns + 1) & (~1));
-		ffts_transpose(buf, dout, Ms, Ns_padded);
+	const size_t Ns_padded = ((Ns + 1) & (~1));
+	ffts_transpose(buf, dout, Ms, Ns_padded);
     }
 }
 
@@ -120,7 +120,7 @@ ffts_execute_nd_real_inv(ffts_plan_t *p, const void *in, void *out)
     const size_t Ms1 = p->Ms[1];
     const size_t Ns0 = p->Ns[0];
     const size_t Ns1 = p->Ns[1];
-	const size_t Ms0_padded = ((Ms0 + 1) & (~1));
+    const size_t Ms0_padded = ((Ms0 + 1) & (~1));
     uint64_t *din = (uint64_t*) in;
     uint64_t *buf = p->buf;
     uint64_t *buf2;
@@ -139,18 +139,18 @@ ffts_execute_nd_real_inv(ffts_plan_t *p, const void *in, void *out)
 
     buf2 = buf + vol;
 
-	ffts_transpose(din, buf, Ms0_padded, Ns0);
+    ffts_transpose(din, buf, Ms0_padded, Ns0);
 
     plan = p->plans[0];
     for (j = 0; j < Ms0; j++) {
         plan->transform(plan, buf + (j * Ns0), buf2 + (j * Ns0));
     }
 
-	ffts_transpose(buf2, buf, Ns0, Ms0_padded);
+    ffts_transpose(buf2, buf, Ns0, Ms0_padded);
 
     plan = p->plans[1];
     for (j = 0; j < Ms1; j++) {
-		plan->transform(plan, buf + (j * Ms0_padded), &doutr[j * Ns1]);
+	plan->transform(plan, buf + (j * Ms0_padded), &doutr[j * Ns1]);
     }
 }
 
