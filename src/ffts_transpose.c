@@ -126,7 +126,18 @@ ffts_transpose(uint64_t *in, uint64_t *out, int w, int h)
                 ip0 += TSIZE;
             }
         }
-    }
+		for (y = TSIZE*ty; y < TSIZE*(ty + 1); y++) {
+			for (int x = tx * TSIZE; x < w; x++) {
+				out[h*x + y] = in[w*y + x];
+			}
+		}
+	}
+	for (ty *= TSIZE; ty < h; ty++)
+	{
+		for (tx = 0; tx < w; tx++) {
+			out[h*tx + ty] = in[w*ty + tx];
+		}
+	}
     /*
     size_t i,j;
     for(i=0;i<w;i+=2) {
